@@ -14,10 +14,10 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3 # Updated to v3
+        uses: actions/checkout@v4 # Updated to v4 for Node.js 20 compatibility
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3 # Updated to v3 for Node.js 20 compatibility
         with:
           dotnet-version: '8.0.100' # or the version you are using
 
@@ -40,7 +40,7 @@ jobs:
       image: semgrep/semgrep
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3 # Updated to v3
+        uses: actions/checkout@v4 # Updated to v4 for Node.js 20 compatibility
 
       - name: Download artifact from previous job
         uses: actions/download-artifact@v3
