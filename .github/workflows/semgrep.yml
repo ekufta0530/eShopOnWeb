@@ -3,10 +3,10 @@ name: Semgrep Scans with .NET lock files
 on:
   push:
     branches:
-      - main # or the default branch you are using
+      - main 
   pull_request:
     branches:
-      - main # or the default branch you are using
+      - main 
 
 jobs:
   restore:
@@ -19,7 +19,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.100' # or the version you are using
+          dotnet-version: '8.0.100'
 
       - name: Restore dependencies
         run: dotnet restore src/Web/Web.csproj -p:RestorePackagesWithLockFile=True # Specify the .csproj file
@@ -47,5 +47,5 @@ jobs:
         with:
           name: lockfile 
 
-      - name: Run Semgrep scan
+      - name: Run Semgrep
         run: semgrep ci
