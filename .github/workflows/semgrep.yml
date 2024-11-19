@@ -14,21 +14,21 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Updated to v4 for Node.js 20 compatibility
+        uses: actions/checkout@v4
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3 # Updated to v3 for Node.js 20 compatibility
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.100' # or the version you are using
 
       - name: Restore dependencies
-        run: dotnet restore -p:RestorePackagesWithLockFile=True
+        run: dotnet restore src/Web/Web.csproj -p:RestorePackagesWithLockFile=True # Specify the .csproj file
 
       - name: Upload Lock File    
         uses: actions/upload-artifact@v3
         with:
           name: lockfile
-          path: '**/packages.lock.json'
+          path: 'src/Web/packages.lock.json' # Adjust path if necessary
 
   semgrep:
     needs: restore
@@ -40,7 +40,7 @@ jobs:
       image: semgrep/semgrep
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Updated to v4 for Node.js 20 compatibility
+        uses: actions/checkout@v4
 
       - name: Download artifact from previous job
         uses: actions/download-artifact@v3
