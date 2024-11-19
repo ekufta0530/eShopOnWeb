@@ -1,0 +1,47 @@
+
+name: Semgrep Scans with .NET lock files
+
+on:
+  push:
+    branches:
+      - main # or the default branch you are using
+  pull_request:
+    branches:
+      - main # or the default branch you are using
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '8.0.100' # or the version you are using
+
+      - name: Restore dependencies
+        run: dotnet restore -p:RestorePackagesWithLockFile=True
+
+      - name: Upload Lock File    
+        uses: actions/upload-artifact@v3
+        with:
+          name: lockfile
+          path: '**/packages.lock.json'
+  semgrep:
+      needs: restore
+      name: Scan
+      runs-on: ubuntu-20.04
+      env:
+        SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      container:
+        image: semgrep/semgrep
+      steps:
+      - uses: actions/checkout@v3
+      - name: Download artifact from previous job
+        uses: actions/download-artifact@v3
+        with:
+          name: lockfile 
+      - run: semgrep ci
